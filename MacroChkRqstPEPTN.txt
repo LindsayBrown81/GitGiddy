@@ -1,21 +1,24 @@
-﻿Sub MacroChkRqstNTPEP()
+Sub ChkRqstToNTPEPLog()
 '
-' MacroChkRqstNTPEP Macro
-' copies to NTPEP log
-'
-' Keyboard Shortcut: Ctrl+Shift+N
-'
+' ChkRqstToNTPEPLog Macro
+' In the check request log, click anywhere on the tab you want to log to.
+' On the check request, click anywhere on the active tab.
+' In Visual Basic for Applications (VBA), hit Ctrl + F and type in the row/range number that the macro last ran on (see Range("F---").Select).
+' Click the Replace button. Type in the row/range number for the row in which you want to log the check request info.
+' Click the Replace All button. 10 replacements made (as of 10/07/15). Click Okay. Close that dialogue box or move it to the side.
+' Run the macro. Make sure it worked before you save either the check request or the log.
+
     Range("C6").Select
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("F89").Select
+    Range("F129").Select
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
     Range("M12").Select
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("E89").Select
+    Range("E129").Select
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
     ActiveWindow.SmallScroll Down:=6
@@ -23,35 +26,38 @@
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("B89").Select
+    Range("B129").Select
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
     Range("K35").Select
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("C89").Select
+    Range("C129").Select
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
-    ActiveWindow.SmallScroll Down:=6
     Range("E37").Select
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("D89").Select
+    Range("D129").Select
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
     Range("G37").Select
     Application.CutCopyMode = False
     Selection.Copy
+    
+    
     ActiveWindow.ActivatePrevious
-    Range("G89").Select
+    Range("G129").Select
     ActiveSheet.Paste
-    Range("A73").Select
-    Application.CutCopyMode = False
-    Selection.AutoFill Destination:=Range("A73:A89"), Type:=xlFillDefault
-    Range("A73:A89").Select
-    Rows("89:89").Select
+    Range("A129").Select
+    ActiveCell.Offset(-1, 0).Select
+    ActiveCell.Copy
+    ActiveCell.Offset(1, 0).Select
+    ActiveSheet.Paste
+    
+    Range("A129", Range("A129").End(xlToRight)).Select
     Selection.Borders(xlDiagonalDown).LineStyle = xlNone
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
     Selection.Borders(xlEdgeLeft).LineStyle = xlNone
@@ -60,7 +66,8 @@
     Selection.Borders(xlEdgeRight).LineStyle = xlNone
     Selection.Borders(xlInsideVertical).LineStyle = xlNone
     Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
-    Range("C89:D89").Select
+    
+    Range("C:D").Select
     With Selection
         .HorizontalAlignment = xlRight
         .VerticalAlignment = xlBottom
@@ -71,8 +78,10 @@
         .ShrinkToFit = False
         .ReadingOrder = xlContext
         .MergeCells = False
+    
     End With
-    Range("E89").Select
-    Selection.NumberFormat = "_($* #,##0.00_);_($* (#,##0.00);_($* ""-""??_);_(@_)"
-    ActiveWorkbook.Save
+    Range("E129").Select
+    Selection.Style = "Currency"
+    ActiveWindow.ActivatePrevious
+    ActiveWindow.ActivatePrevious
 End Sub
