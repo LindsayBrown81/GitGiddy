@@ -1,64 +1,64 @@
 Sub ChkRqstToNTPEPLog()
 '
 ' ChkRqstToNTPEPLog Macro
-' In the check request log, click anywhere on the tab you want to log to.
+' In the check request log, click anywhere on the tab you want to log to. Take note of line # you want to log to.
 ' On the check request, click anywhere on the active tab.
 ' In Visual Basic for Applications (VBA), hit Ctrl + F and type in the row/range number that the macro last ran on (see Range("F---").Select).
 ' Click the Replace button. Type in the row/range number for the row in which you want to log the check request info.
 ' Click the Replace All button. 10 replacements made (as of 10/07/15). Click Okay. Close that dialogue box or move it to the side.
 ' Run the macro. Make sure it worked before you save either the check request or the log.
 
-    Range("C6").Select
+    Range("C6").Select 'Select Payable to value from check request
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("F129").Select
+    Range("H94").Select '*Whatever number is listed in this range, Find and Replace it/Paste into vendor (payee) column on check request log
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
-    Range("M12").Select
+    Range("M12").Select 'Select dollar amount value from check request
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("E129").Select
+    Range("G94").Select 'Paste into Amount column on check request log
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
     ActiveWindow.SmallScroll Down:=6
-    Range("C32").Select
+    Range("C32").Select 'Select Date value from check request
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("B129").Select
+    Range("D94").Select 'Paste into Date column on check request log
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
-    Range("K35").Select
+    Range("K35").Select 'Select Invoice# value from check request
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("C129").Select
+    Range("E94").Select 'Paste into Invoice# column on check request log
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
-    Range("E37").Select
+    Range("E37").Select 'Select Invoice Date value from check request
     Application.CutCopyMode = False
     Selection.Copy
     ActiveWindow.ActivatePrevious
-    Range("D129").Select
+    Range("F94").Select 'Paste into Invoice Date column on check request log
     ActiveSheet.Paste
     ActiveWindow.ActivatePrevious
-    Range("G37").Select
+    Range("G37").Select 'Select Description from check request
     Application.CutCopyMode = False
     Selection.Copy
-    
-    
     ActiveWindow.ActivatePrevious
-    Range("G129").Select
-    ActiveSheet.Paste
-    Range("A129").Select
-    ActiveCell.Offset(-1, 0).Select
-    ActiveCell.Copy
-    ActiveCell.Offset(1, 0).Select
+    Range("I94").Select 'Paste into Description column on check request log
     ActiveSheet.Paste
     
-    Range("A129", Range("A129").End(xlToRight)).Select
-    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Range("C94").Select 'Staying on the active tab, select the FY column on the row we designated with find and replace
+    ActiveCell.Offset(-1, 0).Select 'Move up one row, over none.
+    ActiveCell.Copy 'Copy that FY value
+    ActiveCell.Offset(1, 0).Select 'Move back down one row, over none.
+    ActiveSheet.Paste 'Paste that FY value
+    
+    'Remove borders from row on check request log
+    Range("C94", Range("C94").End(xlToRight)).Select 'Select from the FY column to the end of the row
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone 'No borders of any xl style on this row
     Selection.Borders(xlDiagonalUp).LineStyle = xlNone
     Selection.Borders(xlEdgeLeft).LineStyle = xlNone
     Selection.Borders(xlEdgeTop).LineStyle = xlNone
@@ -67,7 +67,8 @@ Sub ChkRqstToNTPEPLog()
     Selection.Borders(xlInsideVertical).LineStyle = xlNone
     Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
     
-    Range("C:D").Select
+    'Left align and bottom align columns FY through Invoice Date
+    Range("C:F").Select 'Select columns FY through Invoice Date
     With Selection
         .HorizontalAlignment = xlRight
         .VerticalAlignment = xlBottom
@@ -79,8 +80,9 @@ Sub ChkRqstToNTPEPLog()
         .ReadingOrder = xlContext
         .MergeCells = False
     
+    'Format the Amount column as currency
     End With
-    Range("E129").Select
+    Range("G94").Select 'Select the Amount column
     Selection.Style = "Currency"
     ActiveWindow.ActivatePrevious
     ActiveWindow.ActivatePrevious
