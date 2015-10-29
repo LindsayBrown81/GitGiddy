@@ -1,0 +1,241 @@
+Sub AutoInvFill() 'Vince and Lindsay - forking off point
+'
+' Macro1 Macro
+
+
+'Add a "Temp2" Sheet after the last Sheet in the Invoices Query File
+'Sheets.Add After:=Sheets(Sheets.Count)
+    'ActiveSheet.Name = "Temp2"
+
+'Set the working directory for where the Export Data File (ED) resides
+'Remember to enter a "H:\Committees\SCOH\NTPEP\NTPEP Invoice Files\DM2.0-ED-reports\" as the last character in the directory string!!
+OpenPath = "H:\Committees\SCOH\NTPEP\NTPEP Invoice Files\DM2.0-ED-reports\"
+
+'Call the data exported from internet and assign it to a variable
+ED = OpenPath & "ED" & ".xls"
+    'Activate the ED Workbook
+    Workbooks.Open(ED).Activate
+        
+        'Select the first row in the ED workbook and remove the apostrophe from specified header
+        Rows(1).Select
+        For Each currentcell In Selection
+            If currentcell.Value = "'NTPEP Number" Then
+                currentcell.Value = "NTPEP Number"
+            End If
+        Next
+    
+        'Find the specified header value then select & copy the values underneath
+        Dim rngNTPEPnum As Range
+        Set rngNTPEPnum = Range("A1:Z1").Find("NTPEP Number")
+        If rngNTPEPnum Is Nothing Then
+            MsgBox "NTPEP Number column was not found."
+            Exit Sub
+        End If
+        Range(rngNTPEPnum(2), rngNTPEPnum.End(xlDown)).Select
+        
+        Application.Selection.Copy
+        
+        
+        
+    'Activate the workbook with which you wish to import your selected data into
+    Windows("Invoices Query (2011-2015).xlsm").Activate
+        
+        'Add a "Temp2" Sheet after the last Sheet in the Invoices Query File
+        Sheets.Add After:=Sheets(Sheets.Count)
+        ActiveSheet.Name = "Temp2"
+        ActiveSheet.Paste
+        
+    'Invoice Number -- Switch back to the ED workbook
+        Workbooks.Open(ED).Activate
+            Dim rngInvnum As Range
+        Set rngInvnum = Range("A1:Z1").Find("Tracking Number")
+        If rngInvnum Is Nothing Then
+            MsgBox "Invoice (Tracking) Number column was not found."
+            Exit Sub
+        End If
+        Range(rngInvnum(2), rngInvnum.End(xlDown)).Select
+        
+        Application.Selection.Copy
+        
+    'Activate the workbook to which you wish to import your selected data into
+    Windows("Invoices Query (2011-2015).xlsm").Activate
+        Range("B1").Select
+        ActiveSheet.Paste
+        
+        
+     'Company Name -- Switch back to the ED workbook
+        Workbooks.Open(ED).Activate
+            Dim rngCompname As Range
+        Set rngCompname = Range("A1:Z1").Find("Company")
+        If rngCompname Is Nothing Then
+            MsgBox "Company Name column was not found."
+            Exit Sub
+        End If
+        Range(rngCompname(2), rngCompname.End(xlDown)).Select
+        
+        Application.Selection.Copy
+        
+    'Activate the workbook with which you wish to import your selected data into
+    Windows("Invoices Query (2011-2015).xlsm").Activate
+        Range("C1").Select
+        ActiveSheet.Paste
+        
+        
+        'Product Name -- Switch back to the ED workbook
+        Workbooks.Open(ED).Activate
+            Dim rngProdname As Range
+        Set rngProdname = Range("A1:Z1").Find("Product Name")
+        If rngProdname Is Nothing Then
+            MsgBox "Product Name column was not found."
+            Exit Sub
+        End If
+        Range(rngProdname(2), rngProdname.End(xlDown)).Select
+        
+        Application.Selection.Copy
+        
+    'Activate the workbook with which you wish to import your selected data into -LB wrote D1 over C1 below
+    Windows("Invoices Query (2011-2015).xlsm").Activate
+        Range("D1").Select
+        ActiveSheet.Paste
+        
+    
+        'Acronym -- still in temp sheet -- written by VGlick on 10-05-15
+        
+        Range("E1").Select
+        ActiveCell.Formula = "=Left(A1, Len(A1)-12)"
+        Range("E1").Copy
+        ActiveCell.PasteSpecial (xlPasteValues)
+        
+        Range("E1").Copy
+        Columns("D").Find("", Cells(Rows.Count, "D")).Select
+        ActiveCell.Offset(0, 1).Select
+        ActiveCell.Offset(-1, 0).Select
+        Range(Selection, Selection.End(xlUp)).Select
+        ActiveSheet.Paste
+        
+        
+        
+        
+        
+        'Filter out blanks in the Product Category Column and Sort the Invoices Sheet at levels "Product Catefory" and "NTPEP."
+        
+        Sheets("Invoices 15").Select
+            ActiveSheet.Range("$A$1:$BR$873").AutoFilter Field:=2, Criteria1:="<>"
+            Range("B1").Select
+            Range(Selection, Selection.End(xlToRight)).Select
+            Range(Selection, Selection.End(xlDown)).Select
+            ActiveWorkbook.Worksheets("Invoices 15").Sort.SortFields.Clear
+            ActiveWorkbook.Worksheets("Invoices 15").Sort.SortFields.Add Key:=Range( _
+            "B2:B747"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+            xlSortNormal
+            ActiveWorkbook.Worksheets("Invoices 15").Sort.SortFields.Add Key:=Range( _
+            "D2:D747"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+            xlSortNormal
+            With ActiveWorkbook.Worksheets("Invoices 15").Sort
+                .SetRange Range("B1:P747")
+                .Header = xlYes
+                .MatchCase = False
+                .Orientation = xlTopToBottom
+                .SortMethod = xlPinYin
+                .Apply
+            End With
+
+        
+        'NTPEP Numbers -- Paste into first empty row, cell of column "NTPEP."
+        
+        Sheets("Temp2").Select
+        Range("A1").Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Application.Selection.Copy
+        
+        
+        Sheets("Invoices 15").Select
+        Columns("B").Find("", Cells(Rows.Count, "B")).Select
+        ActiveCell.Offset(0, 2).Select
+        ActiveSheet.Paste
+        
+        'Invoice Number -- Paste into first empty row, cell of column "InvoiceID"
+        
+        Sheets("Temp2").Select
+        Range("B1").Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Application.Selection.Copy
+        
+        
+        Sheets("Invoices 15").Select
+        Columns("B").Find("", Cells(Rows.Count, "B")).Select
+        ActiveCell.Offset(0, 9).Select
+        ActiveSheet.Paste
+        
+        'Company Name -- Paste into first empty row, cell of column "InvoiceID"
+        
+        Sheets("Temp2").Select
+        Range("C1").Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Application.Selection.Copy
+        
+        
+        Sheets("Invoices 15").Select
+        Columns("B").Find("", Cells(Rows.Count, "B")).Select 'first empty cell in column -LB wrote 3 over 4 below
+        ActiveCell.Offset(0, 3).Select
+        ActiveSheet.Paste
+        
+        'Product Name -- Paste into first empty row, cell of column "InvoiceID"
+        
+        Sheets("Temp2").Select
+        Range("D1").Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Application.Selection.Copy
+        
+        
+        Sheets("Invoices 15").Select
+        Columns("B").Find("", Cells(Rows.Count, "B")).Select 'first empty cell in column
+        ActiveCell.Offset(0, 4).Select
+        ActiveSheet.Paste
+        
+         
+        'Acronym -- Paste into first empty row, cell of column "InvoiceID"
+        
+        Sheets("Temp2").Select
+        Range("E1").Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Application.Selection.Copy
+        
+        
+        Sheets("Invoices 15").Select
+        Columns("B").Find("", Cells(Rows.Count, "B")).Select 'first empty cell in column
+        ActiveSheet.Paste
+        
+        
+        
+        
+        
+'Delete Temp2 Sheet
+
+Sheets("Temp2").Select
+    ActiveWindow.SelectedSheets.Delete
+    Sheets("Invoices 15").Select
+    
+    
+'Removing Duplicates from Column D, the NTPEP Numbers
+Range("D2").Select
+    Selection.Copy
+    Application.CutCopyMode = False
+    Cells.FormatConditions.Delete
+    Range("I621").Select
+    Range("D1").Activate
+    Selection.FormatConditions.Add Type:=xlExpression, Formula1:= _
+        "=$H1:C40<>7275"
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Font
+        .ThemeColor = xlThemeColorLight2
+        .TintAndShade = 0
+    End With
+   
+End Sub
+
+
+'Close ED Workbook
+
+End Sub
+
