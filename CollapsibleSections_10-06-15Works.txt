@@ -1,0 +1,45 @@
+This is the code for creating collapseable sections as found on the Construction website's annual meeting web page: 
+http://construction.transportation.org/Pages/AnnualMeetings.aspx
+
+//the below is what you paste into the web part that opens after you hit the Embed button at the top of the SharePoint page you're working on
+
+<script>
+$(document).ready(function(){
+    $(".category-qms-expand").click(function(){
+        var id = $(this).attr("id");
+    var name = id.split("-")[1];
+    $("#category-qms-" + name).toggle(400);
+   
+   if($(this).html() == "Close -"){
+        $(this).html("Expand +");
+    }
+    else{
+        $(this).html("Close -");
+    }
+    return false;
+});
+});
+</script>
+
+----------
+
+<!--The below block is the web part's HTML that automatically gets pasted into the page when after you paste the JavaScript above into the Embed feature-->
+
+<div class="ms-rtestate-read ms-rte-wpbox" contenteditable="false">
+   <div class="ms-rtestate-notify  ms-rtestate-read 7d47dffd-82fe-45af-9d17-414e1feb3faa" id="div_7d47dffd-82fe-45af-9d17-414e1feb3faa" unselectable="on">
+   </div>
+
+   <div id="vid_7d47dffd-82fe-45af-9d17-414e1feb3faa" unselectable="on" style="display: none;">
+   </div>
+
+</div>
+
+----------
+
+
+<!--The below is what you type in yourself when you edit the HTML source code-->
+
+<p>Presentations:<br/> 
+   <a class="category-qms-expand" id="expand-SOC2011" href="#" style="padding-right: 5px;">Expand +</a></p>
+<div id="category-qms-SOC2011" style="padding-left: 15px; display: none;">The presentation content</div>
+
